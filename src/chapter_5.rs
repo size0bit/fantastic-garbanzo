@@ -86,4 +86,243 @@ pub fn code5_4() {
     println!("{}", foo(5));
     println!("{}", foo("hello"));
 }
+
 //-----------------------------------------------------
+trait Geometry {
+    fn area(&self) -> f32;
+    fn perimeter(&self) -> f32;
+}
+
+struct Rectangle {
+    width: f32,
+    height: f32,
+}
+
+impl Geometry for Rectangle {
+    fn area(&self) -> f32 {
+        self.width * self.height
+    }
+
+    fn perimeter(&self) -> f32 {
+        (self.width + self.height) * 2.0
+    }
+}
+
+struct Circle {
+    radius: f32,
+}
+
+impl Geometry for Circle {
+    fn area(&self) -> f32 {
+        3.14 * self.radius * self.radius
+    }
+
+    fn perimeter(&self) -> f32 {
+        3.14 * 2.0 * self.radius
+    }
+}
+
+pub fn code5_5() {
+    let rect = Rectangle {
+        width: 8.8,
+        height: 2.2,
+    };
+    println!("rect.area: {}, rect.perimeter: {}", rect.area(), rect.perimeter());
+    let circle = Circle {
+        radius: 3.0
+    };
+    println!("circle.area: {}, circle.perimeter: {}", circle.area(), circle.perimeter());
+}
+
+//-----------------------------------------------------
+fn print(geometry: impl Geometry) {
+    println!("area: {}, perimeter: {}", geometry.area(), geometry.perimeter());
+}
+
+pub fn code5_6() {
+    let rect = Rectangle { width: 10.5, height: 5.5 };
+    print(rect);
+}
+
+use std::arch::is_aarch64_feature_detected;
+//-----------------------------------------------------
+use std::fmt::{Display, Formatter, Result};
+
+impl Display for Rectangle {
+    fn fmt(&self, f: &mut Formatter<'_>) -> Result {
+        write!(f, "Rectangle:({}, {})", self.width, self.height)
+    }
+}
+
+fn print1(geometry: impl Geometry + Display) {
+    println!("{}, area: {}, perimeter: {}", geometry, geometry.area(), geometry.perimeter());
+}
+
+pub fn code5_7() {
+    let rect = Rectangle {
+        width: 10.5,
+        height: 5.5,
+    };
+    print1(rect);
+}
+
+//-----------------------------------------------------
+fn area_add(geo1: impl Geometry, geo2: impl Geometry) {
+    println!("rect.area:{},circle.area:{},total atea:{}", geo1.area(), geo2.area(), geo1.area() + geo2.area());
+}
+
+pub fn code5_8() {
+    let rect = Rectangle {
+        width: 10.5,
+        height: 5.5,
+    };
+    let circle = Circle {
+        radius: 3.0
+    };
+    area_add(rect, circle);
+}
+
+//-----------------------------------------------------
+impl Display for Circle {
+    fn fmt(&self, f: &mut Formatter<'_>) -> Result {
+        write!(f, "/circle:({})", self.radius)
+    }
+}
+
+fn print2<T: Geometry + Display>(geometry: T) {
+    println!("{},area:{},perimeter:{}", geometry, geometry.area(), geometry.perimeter());
+}
+
+pub fn code5_9() {
+    let circle = Circle {
+        radius: 3.0
+    };
+    print2(circle);
+}
+
+//-----------------------------------------------------
+#[derive(Debug)]
+struct Point {
+    x: i32,
+    y: i32,
+}
+
+impl Display for Point {
+    fn fmt(&self, f: &mut Formatter<'_>) -> Result {
+        write!(f, "({},{})", self.x, self.y)
+    }
+}
+
+pub fn code5_10() {
+    let origin = Point {
+        x: 0,
+        y: 0,
+    };
+    println!("{origin}");
+    println!("{origin:?}");
+    println!("{origin:#?}");
+}
+
+//-----------------------------------------------------
+enum BookFormat {
+    Paperback,
+    Hardback,
+    Ebook,
+}
+
+struct Book {
+    isbn: i32,
+    format: BookFormat,
+}
+
+impl PartialEq for Book {
+    fn eq(&self, other: &Self) -> bool {
+        self.isbn == other.isbn
+    }
+}
+
+pub fn code5_11() {
+    let b1 = Book {
+        isbn: 3,
+        format: BookFormat::Paperback,
+    };
+    let b2 = Book {
+        isbn: 3,
+        format: BookFormat::Ebook,
+    };
+    let b3 = Book {
+        isbn: 5,
+        format: BookFormat::Hardback,
+    };
+    assert!(b1 == b2);
+    assert!(b1 != b3);
+}
+
+//-----------------------------------------------------
+use std::cmp::Ordering;
+
+#[derive(Eq)]
+struct Person {
+    id: u32,
+    name: String,
+    height: u32,
+}
+
+impl PartialEq<Self> for Person {
+    fn eq(&self, other: &Self) -> bool {
+        self.height == other.height
+    }
+}
+
+impl PartialOrd<Self> for Person {
+    fn partial_cmp(&self, other: &Self) -> Option<Ordering> {
+        Some(self.cmp(other))
+    }
+}
+
+impl Ord for Person {
+    fn cmp(&self, other: &Self) -> Ordering {
+        self.height.cmp(&other.height)
+    }
+}
+
+pub fn code5_12() {
+    let person1 = Person {
+        id: 1,
+        name: "zhangsan".to_string(),
+        height: 168,
+    };
+    let person2 = Person {
+        id: 2,
+        name: "lisi".to_string(),
+        height: 175,
+    };
+    let person3 = Person {
+        id: 3,
+        name: "sanwu".to_string(),
+        height: 180,
+    };
+    assert_eq!(person1 < person2, true);
+    assert_eq!(person2 > person3, false);
+    assert!(person1.lt(&person2));
+    assert!(person3.gt(&person2));
+    let tallest_person = person1.max(person2).max(person3);
+    println!("id:{},name:{}", tallest_person.id, tallest_person.name);
+}
+
+//-----------------------------------------------------
+#[derive(Default, Debug)]
+struct MyStruct {
+    foo: i32,
+    bar: f32,
+}
+
+pub fn code5_13() {
+    let options1: MyStruct = Default::default();
+    let options2 = MyStruct {
+        foo: 7,
+        ..Default::default()
+    };
+    println!("options1:{:?}", options1);
+    println!("options1:{:?}", options2);
+}
