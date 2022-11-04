@@ -144,7 +144,7 @@ pub fn code5_6() {
     print(rect);
 }
 
-use std::arch::is_aarch64_feature_detected;
+
 //-----------------------------------------------------
 use std::fmt::{Display, Formatter, Result};
 
@@ -326,3 +326,48 @@ pub fn code5_13() {
     println!("options1:{:?}", options1);
     println!("options1:{:?}", options2);
 }
+
+//-----------------------------------------------------
+pub fn code5_14() {
+    let x: u16 = 7;
+    let y = x as u32;
+    println!("u16:{},u32:{}", x, y);
+    let x: u32 = u32::MAX;
+    let y = x as u16;
+    println!("u32:{},u16:{}", x, y);
+    let x = 65u8;
+    let y = x as char;
+    println!("u8:{},char:{}", x, y);
+    let x = 'A';
+    let y = x as u8;
+    println!("char:{},u8:{}", x, y);
+    let x = 7;
+    let y = x as f64;
+    println!("i32:{},f64:{}", x, y);
+    let x = 7.7;
+    let y = x as i32;
+    println!("f64:{},i32:{}", x, y);
+}
+
+//-----------------------------------------------------
+pub fn code5_15() {
+    let x = 7;
+    let y = x.to_string();
+    println!("i32: {}, String: {}", x, y);
+    let x = 7.7;
+    let y = x.to_string();
+    println!("f64: {}, String: {}", x, y);
+    let x = String::from("7");
+    let y = x.parse::<i32>().unwrap();
+    println!("String: {}, i32: {}", x, y);
+    let x = String::from("7.7");
+    let x1: f64 = x.parse().unwrap();
+    println!("String: {}, f64: {}", x, x1);
+    let x = String::from("hello");
+    let y = x.as_str();
+    println!("{y}");
+    let x = "hello";
+    let y = x.to_string();
+    println!("{y}");
+}
+//-----------------------------------------------------
