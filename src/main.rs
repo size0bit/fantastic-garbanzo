@@ -11,7 +11,9 @@ mod chapter_8;
 
 const DIVIDING_LINE: &str = "-----------------------------------------------------";
 
-fn main() {}
+fn main() {
+    println!("hello rust!");
+}
 
 #[cfg(test)]
 mod chapter_two {
